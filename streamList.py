@@ -9,7 +9,7 @@ class streamList():
         self.curPos = -1
 
     async def addList(self,message):
-        if (message[0] == "!add"):
+        if (message[0] == config.commandPrefix):
             print("Adding " + message[1])
             message.pop(0)
             self.msgList.append(" ".join(message))

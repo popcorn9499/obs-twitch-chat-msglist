@@ -59,6 +59,7 @@ def script_properties():
     p = obs.obs_properties_add_list(props, "source", "Text Source",
                                     obs.OBS_COMBO_TYPE_EDITABLE,
                                     obs.OBS_COMBO_FORMAT_STRING)
+    obs.obs_properties_add_text(props,"Command Prefix","Command Prefix",obs.OBS_TEXT_DEFAULT)
     obs.obs_properties_add_button(props, "button", "Refresh Msg List", refresh_pressed)
 
 
@@ -86,6 +87,7 @@ def script_update(settings):
     ircPort = obs.obs_data_get_int(settings, "IRC Port")
     ircNickname = obs.obs_data_get_string(settings, "IRC Nickname")
     ircPassword = obs.obs_data_get_string(settings, "IRC Password")
+    config.commandPrefix = obs.obs_data_get_string(settings, "Command Prefix")
     config.irc = {
         "Enabled": True,
         "Servers": {
