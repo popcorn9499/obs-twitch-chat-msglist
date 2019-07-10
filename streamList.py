@@ -8,13 +8,16 @@ class streamList():
         self.msgList = []
         self.curPos = -1
 
-    async def addList(self,message):
+    async def addList(self,message,host,channel,author):
         if (message[0] == config.commandPrefix):
             print("Adding " + message[1])
             message.pop(0)
             self.msgList.append(" ".join(message))
             if self.curPos == -1:
                 await self.updateSource()
+            msg=config.commandResponse
+            msg = msg.replace("%Author%",author)
+            await config.ircObj.sendMSG(msg,host,channel)
 
     def displayNext(self):
         print("Displaying next")

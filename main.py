@@ -60,6 +60,7 @@ def script_properties():
                                     obs.OBS_COMBO_TYPE_EDITABLE,
                                     obs.OBS_COMBO_FORMAT_STRING)
     obs.obs_properties_add_text(props,"Command Prefix","Command Prefix",obs.OBS_TEXT_DEFAULT)
+    obs.obs_properties_add_text(props,"Command Response","Command Response (example items: %Author%)",obs.OBS_TEXT_DEFAULT)
     obs.obs_properties_add_button(props, "button", "Refresh Msg List", refresh_pressed)
 
 
@@ -88,6 +89,7 @@ def script_update(settings):
     ircNickname = obs.obs_data_get_string(settings, "IRC Nickname")
     ircPassword = obs.obs_data_get_string(settings, "IRC Password")
     config.commandPrefix = obs.obs_data_get_string(settings, "Command Prefix")
+    config.commandResponse = obs.obs_data_get_string(settings, "Command Response")
     config.irc = {
         "Enabled": True,
         "Servers": {
@@ -139,6 +141,7 @@ def script_load(settings):
     ircNickname = obs.obs_data_get_string(settings, "IRC Nickname")
     ircPassword = obs.obs_data_get_string(settings, "IRC Password")
     config.commandPrefix = obs.obs_data_get_string(settings, "Command Prefix")
+    config.commandResponse = obs.obs_data_get_string(settings, "Command Response")
     config.irc = {
         "Enabled": True,
         "Servers": {

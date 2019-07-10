@@ -134,7 +134,8 @@ class irc():#alot of this code was given to me from thehiddengamer then i adapte
                 msgStats = {"sentFrom":"IRC","msgData": None,"Bot":"IRC","Server": host,"Channel": data[2], "author": user,"authorData": None,"authorsRole": {"Normal": 0},"msg":' '.join(message),"sent":False}
                 role = {}
                 role.update({"Normal": 0})
-                await config.streamList.addList(message)
+                channel = data[2]
+                await config.streamList.addList(message,host,channel,user)
 
         elif data[1] == 'JOIN':
             user = data[0].split('!')[0].lstrip(":")
@@ -167,6 +168,12 @@ class irc():#alot of this code was given to me from thehiddengamer then i adapte
                 await asyncio.sleep(10)
                 await self.ircConnect(loop,host)
                 loop.stop()
+
+    async def sendMSG(self,msg,host,channel): #sends messages to youtube live chat
+        while self.serviceStarted[host] != True:
+            await asyncio.sleep(0.2)
+        self.writer[host].write("PRIVMSG {0} :{1}".format(channel,msg).encode("utf-8") + b'\r\n')
+
         
 #this starts everything for the irc client 
 ##possibly could of put all this in a class and been done with it?
@@ -176,4 +183,3 @@ def ircStart(loop):
     if config.irc["Enabled"] == True:
         loop.create_task(IRC.irc_bot(loop))
         print("started")
-    print("Heyo")
