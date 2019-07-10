@@ -54,10 +54,14 @@ def script_properties():
     obs.obs_properties_add_int(props,"IRC Port","Port",0,65535,1)
     obs.obs_properties_add_text(props,"IRC Nickname","Nickname",obs.OBS_TEXT_DEFAULT)
     obs.obs_properties_add_text(props,"IRC Password","Password",obs.OBS_TEXT_PASSWORD)
-
+    obs.obs_properties_add_button(props, "button1", "Connect", connect_pressed)
+    obs.obs_properties_add_button(props, "button2", "Disconnect", disconnect_pressed)
     p = obs.obs_properties_add_list(props, "source", "Text Source",
                                     obs.OBS_COMBO_TYPE_EDITABLE,
                                     obs.OBS_COMBO_FORMAT_STRING)
+    obs.obs_properties_add_button(props, "button", "Refresh Msg List", refresh_pressed)
+
+
     sources = obs.obs_enum_sources()
     if sources is not None:
         for source in sources:
@@ -67,11 +71,6 @@ def script_properties():
                 obs.obs_property_list_add_string(p, name, name)
 
         obs.source_list_release(sources)
-
-    
-    obs.obs_properties_add_button(props, "button1", "Connect", connect_pressed)
-    obs.obs_properties_add_button(props, "button2", "Disconnect", disconnect_pressed)
-    obs.obs_properties_add_button(props, "button", "Refresh Msg List", refresh_pressed)
     return props
 
 
@@ -129,6 +128,32 @@ def script_load(settings):
     hotkey_save_array = obs.obs_data_get_array(settings, "streamMsgDispPrev")
     obs.obs_hotkey_load(config.dispPrev_hotkey_id, hotkey_save_array)
     obs.obs_data_array_release(hotkey_save_array)
+
+    #loads all the initial configs from obs for the tool
+    source_name = obs.obs_data_get_string(settings, "source")
+    ircServer = obs.obs_data_get_string(settings, "IRC Server")
+    ircChannel = obs.obs_data_get_string(settings, "IRC Channel")
+    ircPort = obs.obs_data_get_int(settings, "IRC Port")
+    ircNickname = obs.obs_data_get_string(settings, "IRC Nickname")
+    ircPassword = obs.obs_data_get_string(settings, "IRC Password")
+    config.commandPrefix = obs.obs_data_get_string(settings, "Command Prefix")
+    config.irc = {
+        "Enabled": True,
+        "Servers": {
+            ircServer:{
+                "Channel":{
+                    ircChannel:{
+                        "Enabled": True
+                    }
+                },
+                "Enabled": True,
+                "Nickname": ircNickname,
+                "Password": ircPassword,
+                "Port": ircPort
+            }
+        }
+    }
+    config.obsSource = source_name
 
     config.secondaryThread = main()
     config.secondaryThread.start()
