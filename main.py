@@ -21,8 +21,9 @@ def refresh_pressed(props, prop): #refreshes the msg list
 
 def connect_pressed(props, prop): #connect button to start the entire asyncio event loop
     config.stopThread = False
-    config.secondaryThread  = main()
-    config.secondaryThread.start()
+    if not config.secondaryThread.isAlive():
+        config.secondaryThread  = main()
+        config.secondaryThread.start()
 
 def disconnect_pressed(props, prop): #disconnect button to stop the entire asyncio event loop
     config.stopThread = True
